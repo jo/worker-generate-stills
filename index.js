@@ -13,26 +13,6 @@ var processor = (function() {
       _ = require("underscore");
 
 
-  // borrowed from fluent-ffmpeg
-  // https://github.com/schaermu/node-fluent-ffmpeg/blob/master/lib/extensions.js#L28
-  function ffmpegTimemarkToSeconds(timemark) {
-    var parts = timemark.split(':');
-    var secs = 0;
-
-    // add hours
-    secs += parseInt(parts[0], 10) * 3600;
-    // add minutes
-    secs += parseInt(parts[1], 10) * 60;
-
-    // split sec/msec part
-    var secParts = parts[2].split('.');
-
-    // add seconds
-    secs += parseInt(secParts[0], 10);
-
-    return secs;
-  };
-
   return {
     check: function(doc, name) {
       return formats.indexOf(name.toLowerCase().replace(/^.*\.([^\.]+)$/, '$1')) > -1;
