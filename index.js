@@ -8,9 +8,7 @@ var processor = (function() {
       path = require('path'),
       fs = require('fs'),
       util = require('util'),
-      spawn = require('child_process').spawn,
-      _ = require("underscore");
-
+      spawn = require('child_process').spawn;
 
   return {
     check: function(doc, name) {
@@ -27,7 +25,7 @@ var processor = (function() {
 
       this._log(doc, 'ffmpeg ' + name);
 
-      ffmpeg.on('exit', _.bind(function(code) {
+      ffmpeg.on('exit', (function(code) {
         var i = 1,
             filename;
 
@@ -50,7 +48,7 @@ var processor = (function() {
         }
         
         next(code);
-      }, this));
+      }).bind(this));
     }
   };
 })();
