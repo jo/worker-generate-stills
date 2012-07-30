@@ -1,9 +1,8 @@
-// Worker Attachments
+// Worker Generate Stills
+
 var request = require("request");
+var WorkerAttachments = require("worker-attachments");
 
-var WorkerAttachments = require("worker-attachments/lib/WorkerAttachments");
-
-// example mimimal worker that checks every jpg or png image
 var processor = (function() {
   var formats = ['mp4'],
       path = require('path'),
@@ -21,16 +20,12 @@ var processor = (function() {
       var tempdir = '/tmp',
           // note that util.format does not support something like %3d
           stillname = tempdir + '/' + name.replace(/\..*$/, '') + '-%d.jpg',
+          // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
           args = ['-i', this._urlFor(doc, name), '-r', '1/10', '-s', this.config.size, stillname],
+          // let ffmpeg do the media streaming
           ffmpeg = spawn('ffmpeg', args);
 
-
-      // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
-
       this._log(doc, 'ffmpeg ' + name);
-
-      // print errors
-      // ffmpeg.stderr.pipe(process.stderr);
 
       ffmpeg.on('exit', _.bind(function(code) {
         var i = 1,
