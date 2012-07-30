@@ -24,10 +24,16 @@ A Worker Configuration File might look like this:
     {
       "_id": "worker-config/generate-thumbnails",
       "_rev": "9-a653b27246b01cf9204fa9f5dee7cc64",
-      "size": "135x135"
+      "versions": {
+        "medium": {
+          "size": "800x600"
+        }
+      }
     }
 
 You can update the config live so that all future processings will take the new configuration.
+
+Note that attachment names which starts with a version name, followed by a '/' are ignored.
 
 _size_ is a expression for imagemagick, so you can do eg. 120x120!, 120x and so on.
 

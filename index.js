@@ -10,45 +10,59 @@ var processor = (function() {
       util = require('util'),
       spawn = require('child_process').spawn;
 
+  function process(doc, name, url, version, options, cb) {
+    var tempdir = '/tmp',
+        // note that util.format does not support something like %3d
+        stillname = tempdir + '/' + name.replace(/\..*$/, '') + '-%d.jpg',
+        // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
+        args = ['-i', url, '-r', '1/10', '-s', options.size, stillname],
+        // let ffmpeg do the media streaming
+        ffmpeg = spawn('ffmpeg', args);
+
+    ffmpeg.on('exit', function(code) {
+      var i = 1,
+          filename;
+
+      if (code !== 0) {
+        return cb(code);
+      }
+
+      while (path.existsSync(util.format(stillname, i))) {
+        filename = util.format(stillname, i);
+
+        doc._attachments[version + '/' + path.basename(filename)] = {
+          content_type: 'image/jpeg',
+          data: fs.readFileSync(filename).toString('base64')
+        };
+        fs.unlinkSync(filename);
+        i++;
+      }
+
+      cb(code);
+    });
+  }
+
   return {
     check: function(doc, name) {
       return formats.indexOf(name.toLowerCase().replace(/^.*\.([^\.]+)$/, '$1')) > -1;
     },
     process: function(doc, name, next) {
-      var tempdir = '/tmp',
-          // note that util.format does not support something like %3d
-          stillname = tempdir + '/' + name.replace(/\..*$/, '') + '-%d.jpg',
-          // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
-          args = ['-i', this._urlFor(doc, name), '-r', '1/10', '-s', this.config.size, stillname],
-          // let ffmpeg do the media streaming
-          ffmpeg = spawn('ffmpeg', args);
+      var cnt = 0;
+      for (version in this.config.versions) cnt++;
 
-      this._log(doc, 'ffmpeg ' + name);
-
-      ffmpeg.on('exit', (function(code) {
-        var i = 1,
-            filename;
-
-        if (code !== 0) {
-          console.warn("error in `ffmpeg`")
-          this._log(doc, 'error ' + name);
-        } else {
-          while (path.existsSync(util.format(stillname, i))) {
-            filename = util.format(stillname, i);
-
-            doc._attachments[this.config.folder + '/' + path.basename(filename)] = {
-              content_type: 'image/jpeg',
-              data: fs.readFileSync(filename).toString('base64')
-            };
-            fs.unlinkSync(filename);
-            i++;
+      for (version in this.config.versions) {
+        this._log(doc, 'render ' + version + '/' + name);
+        process(doc, name, this._urlFor(doc, name), version, this.config.versions[version], (function(code) {
+          if (code !== 0) {
+            console.warn("error in `ffmpeg`")
+            this._log(doc, 'error ' + version + '/' + name);
+          } else {
+            this._log(doc, 'done ' + version + '/' + name);
           }
-
-          this._log(doc, 'done ' + name);
-        }
-        
-        next(code);
-      }).bind(this));
+          cnt--;
+          if (cnt === 0) next(null);
+        }).bind(this));
+      }
     }
   };
 })();
@@ -58,8 +72,11 @@ var config = {
   config_id: 'worker-config/generate-stills',
   processor: processor,
   defaults: {
-    folder: 'stills',
-    size: '1024x800'
+    versions: {
+      stills: {
+        size: '1024x800'
+      }
+    }
   }
 };
 
