@@ -15,7 +15,7 @@ var processor = (function() {
         // note that util.format does not support something like %3d
         stillname = tempdir + '/' + name.replace(/\..*$/, '') + '-%d.jpg',
         // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
-        args = ['-i', url, '-r', '1/10', '-s', options.size, stillname],
+        args = ['-i', '-', '-r', '1/10', '-s', options.size, stillname],
         // let ffmpeg do the media streaming
         ffmpeg = spawn('ffmpeg', args);
 
@@ -40,6 +40,9 @@ var processor = (function() {
 
       cb(code);
     });
+    
+    // request image and send it to ffmpeg
+    request(url).pipe(ffmpeg.stdin);
   }
 
   return {
