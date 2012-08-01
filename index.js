@@ -12,23 +12,23 @@ var processor = (function() {
 
   function process(doc, name, url, version, options, cb) {
     var tempdir = '/tmp',
-        // note that util.format does not support something like %3d
-        stillname = tempdir + '/' + doc._id + '-' + name.replace(/\..*$/, '') + '-%d.jpg',
+        prefix = tempdir + '/' + doc._id + '-' + name.replace(/\..*$/, '') + '-',
+        suffix = '.jpg',
         // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
-        args = ['-i', '-', '-r', '1/10', '-s', options.size, stillname],
+        args = ['-i', '-', '-r', '1/10', '-s', options.size, prefix + '%04d' + suffix],
         // let ffmpeg do the media streaming
         ffmpeg = spawn('ffmpeg', args);
 
     ffmpeg.on('exit', function(code) {
-      var i = 1,
-          filename;
+      var i = 1,  // ffmpeg starts with 1
+          nr, filename;
 
       if (code !== 0) {
         return cb(code);
       }
 
-      while (path.existsSync(util.format(stillname, i))) {
-        filename = util.format(stillname, i);
+      while (path.existsSync(prefix + String('0000' + i).slice(-4) + suffix)) {
+        filename = prefix + String('0000' + i).slice(-4) + suffix;
 
         doc._attachments[version + '/' + path.basename(filename).replace(doc._id + '-', '')] = {
           content_type: 'image/jpeg',
