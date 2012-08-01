@@ -13,7 +13,7 @@ var processor = (function() {
   function process(doc, name, url, version, options, cb) {
     var tempdir = '/tmp',
         // note that util.format does not support something like %3d
-        stillname = tempdir + '/' + name.replace(/\..*$/, '') + '-%d.jpg',
+        stillname = tempdir + '/' + doc._id + '-' + name.replace(/\..*$/, '') + '-%d.jpg',
         // http://debuggable.com/posts/FFMPEG_multiple_thumbnails:4aded79c-6744-4bc1-b30e-59bccbdd56cb
         args = ['-i', '-', '-r', '1/10', '-s', options.size, stillname],
         // let ffmpeg do the media streaming
