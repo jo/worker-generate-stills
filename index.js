@@ -30,7 +30,7 @@ var processor = (function() {
       while (path.existsSync(util.format(stillname, i))) {
         filename = util.format(stillname, i);
 
-        doc._attachments[version + '/' + path.basename(filename).replace(doc._id, '')] = {
+        doc._attachments[version + '/' + path.basename(filename).replace(doc._id + '-', '')] = {
           content_type: 'image/jpeg',
           data: fs.readFileSync(filename).toString('base64')
         };
