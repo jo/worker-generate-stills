@@ -1,7 +1,7 @@
 # Worker Generate Stills
 
 This worker generates stills from videos
-for all video types supported by imagemagick.
+for video types supported by imagemagick.
 
 
 ## Prerequisites
@@ -26,7 +26,8 @@ A Worker Configuration File might look like this:
       "_rev": "9-a653b27246b01cf9204fa9f5dee7cc64",
       "versions": {
         "medium": {
-          "size": "800x600"
+          "size": "800x600",
+          "ratio": "1/25"
         }
       }
     }
@@ -35,7 +36,9 @@ You can update the config live so that all future processings will take the new 
 
 Note that attachment names which starts with a version name, followed by a '/' are ignored.
 
-_size_ is a expression for imagemagick, so you can do eg. 120x120!, 120x and so on.
+_size_ is a expression for ffmpeg, so you can do eg. 120x120!, 120x and so on.
+
+_ratio_ is the framerate of the stills.
 
 
 ## Worker Status Document
@@ -71,19 +74,14 @@ The status field can be _triggered_, _completed_ or _error_.
 
 The worker status is scoped by the worker name in order to have many workers
 processing the same document.
+The worker status is also per attachment to process only attachments which had changed.
 
 
 ## Running the Worker
 
-To start, this needs either the following environment variables set:
+To start, this needs the following environment variables set:
 
-    export HOODIE_SERVER=http://example.org
-    npm start
-
-
-or pass them to the commandline:
-
-    HOODIE_SERVER=http://example.org npm start
+    COUCH_SERVER=http://example.org COUCH_DB=mydb npm start
 
 
 ## License & Copyright

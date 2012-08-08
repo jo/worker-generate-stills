@@ -1,15 +1,16 @@
 {
   "name": "worker-generate-stills",
-  "description": "Hoodie worker which generates stills from videos.",
+  "description": "CouchDB worker which generates stills from videos.",
   "author": {
     "name": "Johannes J. Schmidt",
     "url": "http://github.com/jo",
     "email": "schmidt@netzmerk.com"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": {
     "request": "*",
-    "worker-attachments": ">=0.2.3"
+    "underscore": "*",
+    "couchdb-worker": "=0.4.2"
   },
   "scripts": {
     "start": "node index.js"
