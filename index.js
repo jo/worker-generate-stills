@@ -17,7 +17,7 @@ function generateStills(doc, name, version, options, done) {
       basename = name.replace(/\..*$/, ''),
       prefix = '/tmp/' + doc._id + '-' + version  + '-' + basename.replace('/', '-') + '-',
       suffix = '.jpg',
-      args = ['-i', '-', '-r', options.ratio || '1/10', '-s', options.size, prefix + '%04d' + suffix],
+      args = ['-i', '-', '-r', options.ratio || '1/10', prefix + '%04d' + suffix],
       ffmpeg = spawn('ffmpeg', args);
 
   ffmpeg.stderr.pipe(process.stderr);
@@ -56,7 +56,6 @@ var config = {
   defaults: {
     versions: {
       stills: {
-        size: '1024x800',
         ratio: '1/10'
       }
     }

@@ -26,7 +26,6 @@ A Worker Configuration File might look like this:
       "_rev": "9-a653b27246b01cf9204fa9f5dee7cc64",
       "versions": {
         "medium": {
-          "size": "800x600",
           "ratio": "1/25"
         }
       }
@@ -35,8 +34,6 @@ A Worker Configuration File might look like this:
 You can update the config live so that all future processings will take the new configuration.
 
 Note that attachment names which starts with a version name, followed by a '/' are ignored.
-
-_size_ is a expression for ffmpeg, so you can do eg. 120x120!, 120x and so on.
 
 _ratio_ is the framerate of the stills.
 
