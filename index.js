@@ -49,7 +49,7 @@ function generateStills(doc, name, version, options, done) {
   request(url).pipe(ffmpeg.stdin);
 }
 
-var formats = ['mp4'];
+var formats = ['mp4', 'm4v'];
 var config = {
   name: 'generate-stills',
   server: process.env.COUCH_SERVER || "http://127.0.0.1:5984",
