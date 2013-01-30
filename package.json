@@ -1,6 +1,6 @@
 {
   "name": "worker-generate-stills",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "CouchDB worker which generates stills from videos.",
   "keywords": ["CouchDB", "attchments", "worker", "ffmpeg", "video", "preview", "image", "still"],
   "homepage": "https://github.com/null2/worker-generate-stills",
