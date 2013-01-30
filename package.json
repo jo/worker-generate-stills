@@ -1,12 +1,22 @@
 {
   "name": "worker-generate-stills",
+  "version": "0.3.2",
   "description": "CouchDB worker which generates stills from videos.",
+  "keywords": ["CouchDB", "attchments", "worker", "ffmpeg", "video", "preview", "image", "still"],
+  "homepage": "https://github.com/null2/worker-generate-stills",
+  "bugs": {
+    "url" : "http://github.com/null2/worker-generate-stills/issues",
+    "email" : "schmidt@netzmerk.com"
+  },
   "author": {
     "name": "Johannes J. Schmidt",
-    "url": "http://github.com/jo",
-    "email": "schmidt@netzmerk.com"
+    "email": "schmidt@netzmerk.com",
+    "url": "http://die-tf.de"
   },
-  "version": "0.3.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/null2/worker-generate-stills"
+  },
   "dependencies": {
     "request": "*",
     "underscore": "*",
